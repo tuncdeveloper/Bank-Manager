@@ -1,29 +1,31 @@
-package domain;
+package model;
 
 public class BankAccount {
 
-    private int id ;
+    private int bankAccountId ;
     private String accountNumber;
     private String iban;
     private double bankBalance;
+    private Integer customerIdFk;
 
     public BankAccount(){
 
     }
 
-    public BankAccount(int id, String accountNumber, String iban, Integer bankBalance) {
-        this.id = id;
-        this.accountNumber = accountNumber;
-        this.iban = iban;
-        this.bankBalance = bankBalance;
+    public Integer getCustomerIdFk() {
+        return customerIdFk;
     }
 
-    public int getId() {
-        return id;
+    public void setCustomerIdFk(Integer customerIdFk) {
+        this.customerIdFk = customerIdFk;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getBankAccountId() {
+        return bankAccountId;
+    }
+
+    public void setBankAccountId(int bankAccountId) {
+        this.bankAccountId = bankAccountId;
     }
 
     public String getAccountNumber() {
@@ -53,9 +55,9 @@ public class BankAccount {
     @Override
     public String toString() {
         return "BankAccount{" +
-                "id=" + id +
+                "bankAccountId=" + bankAccountId +
                 ", accountNumber='" + accountNumber + '\'' +
-                ", IBAN='" + iban + '\'' +
+                ", iban='" + iban + '\'' +
                 ", bankBalance=" + bankBalance +
                 '}';
     }

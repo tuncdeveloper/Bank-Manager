@@ -1,6 +1,5 @@
-package domain;
+package manager;
 
-import java.util.List;
 import java.util.Random;
 
 public class BankAccountFactory {
@@ -34,7 +33,7 @@ public class BankAccountFactory {
     // Rastgele bakiye oluşturma metodu
     public double generateRandomBalance() {
         Random random = new Random();
-        double balance = 1000 + random.nextInt(5000); // 1000 ile 50000 arasında
+        double balance = 1000 + random.nextInt(5000); // 1000 ile 5000 arasında
         return balance;
     }
 

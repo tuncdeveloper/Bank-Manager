@@ -1,9 +1,12 @@
-package userInterface;
+package gui;
 
-import database.DbPostgre;
-import domain.BankAccount;
-import domain.Customer;
+import model.BankAccount;
+import model.Customer;
+import repository.BankAccountDb;
+
+import repository.IBankAccountDb;
 import test.InitCall;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +16,9 @@ import java.util.List;
 
 public class TransferMenuGui extends JFrame implements InitCall {
 
-    DbPostgre dbPostgre = new DbPostgre();
+    IBankAccountDb bankAccountDb = new BankAccountDb();
 
     private JList<BankAccount> bankAccountJList;
-    private JLabel instructionLabel, customerNameLabel, customerPhoneLabel;
     private JButton selectButton, cancelButton;
 
     private Customer customerLogged;
@@ -27,6 +29,13 @@ public class TransferMenuGui extends JFrame implements InitCall {
 
     @Override
     public void initWindow() {
+        // Set Flatlaf Look and Feel
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf()); // Modern görünüm için
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
         JPanel panel = initPanel();
         add(panel);
         setTitle("Para Transferi - EFT");
@@ -50,17 +59,17 @@ public class TransferMenuGui extends JFrame implements InitCall {
         gbc.fill = GridBagConstraints.HORIZONTAL; // Yatayda genişlemeye izin verir
 
         // Kullanıcı bilgilerini ve butonları ekleyelim
-        customerNameLabel = new JLabel("Müşteri: " + customerLogged.getName() + " " + customerLogged.getSurname());
+        var customerNameLabel = new JLabel("Müşteri: " + customerLogged.getName() + " " + customerLogged.getSurname());
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2; // İki sütun boyunca yayılır
         topPanel.add(customerNameLabel, gbc);
 
-        customerPhoneLabel = new JLabel("Telefon: " + customerLogged.getPhoneNumber());
+        var customerPhoneLabel = new JLabel("Telefon: " + customerLogged.getPhoneNumber());
         gbc.gridy = 1;
         topPanel.add(customerPhoneLabel, gbc);
 
-        instructionLabel = new JLabel("Para aktarmak için hesap seçiniz");
+        var instructionLabel = new JLabel("Para aktarmak için hesap seçiniz");
         gbc.gridy = 2;
         topPanel.add(instructionLabel, gbc);
 
@@ -132,10 +141,34 @@ public class TransferMenuGui extends JFrame implements InitCall {
         bankAccountJList = new JList<>(defaultListModel);
         bankAccountJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        // Daha modern bir görünüm için JList'e Custom Renderer ekleyelim
+        bankAccountJList.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
+            JPanel itemPanel = new JPanel(new BorderLayout());
+
+            // Hesap bilgilerini daha detaylı gösterelim: accountNumber, bankBalance, bank_id, iban
+            String accountInfo = String.format(
+                    "<html><b>Hesap ID:</b> %d - <b>Hesap No:</b> %s - <b>IBAN:</b> %s<br><b>Bakiye:</b> %.2f TL</html>",
+                    value.getBankAccountId(),  // Banka hesap ID'si
+                    value.getAccountNumber(),  // Hesap numarası
+                    value.getIBAN(),           // IBAN
+                    value.getBankBalance()     // Bakiye
+            );
+
+
+            JLabel accountLabel = new JLabel(accountInfo);
+            itemPanel.add(accountLabel, BorderLayout.CENTER);
+
+            // Seçili öğe için renk değişimi
+            itemPanel.setBackground(isSelected ? new Color(0x2196F3) : Color.WHITE);
+            itemPanel.setForeground(isSelected ? Color.WHITE : Color.BLACK);
+
+            return itemPanel;
+        });
+
         JScrollPane jScrollPane = new JScrollPane(bankAccountJList);
         panel.add(jScrollPane, BorderLayout.CENTER);
 
-        List<BankAccount> bankAccountList = dbPostgre.getBankAccountsForCustomer(customerLogged.getId());
+        List<BankAccount> bankAccountList = bankAccountDb.getBankAccountsForCustomer(customerLogged.getCustomerId());
 
         if (bankAccountList != null && !bankAccountList.isEmpty()) {
             for (BankAccount bankAccount : bankAccountList) {

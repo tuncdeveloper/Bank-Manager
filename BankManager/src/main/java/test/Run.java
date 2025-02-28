@@ -1,6 +1,6 @@
 package test;
 
-import userInterface.MainWindowGui;
+import gui.mainGui.MainWindowGui;
 
 public class Run {
 

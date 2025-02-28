@@ -5,8 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>oop3</artifactId>
+    <artifactId>bank</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <!-- FlatLaf - Modern Look and Feel -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.4</version>  <!-- En güncel sürümü kontrol edebilirsiniz -->
+        </dependency>
+
+
+        <!-- PostgreSQL JDBC Driver -->
+    </dependencies>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
