@@ -1,4 +1,4 @@
-BankManager
+#BankManager
 
 Overview
 BankManager is a comprehensive banking management system designed to manage customer accounts, bank transactions, account creation, balance tracking, and more. It allows both admin and user roles, where admins can manage customer data, update account information, reset passwords, and process EFT transactions. Users can perform various operations like viewing account details, making deposits, withdrawals, and transferring funds.
